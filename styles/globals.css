@@ -1,0 +1,14 @@
+:root {
+  --g1: #0a2e1a;
+  --g2: #1a5c38;
+  --g3: #22c55e;
+  --g4: #4ade80;
+  --bg:  #f0faf4;
+  --bg2: #e6f4ec;
+  --text1: #0a2e1a;
+  --text2: #3d6b52;
+  --text3: #7a9e88;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text1); font-family: var(--font-inter), 'Inter', sans-serif; }
