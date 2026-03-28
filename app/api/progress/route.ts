@@ -17,6 +17,9 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+  // Ensure profile row exists (FK guard)
+  await supabase.from('profiles').upsert({ id: user.id, email: user.email ?? '' }, { onConflict: 'id' })
+
   const { error } = await supabase
     .from('lesson_progress')
     .upsert({ user_id: user.id, module_id: moduleId, lesson_id: lessonId }, { onConflict: 'user_id,module_id,lesson_id' })

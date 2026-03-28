@@ -17,12 +17,16 @@ export default function MarkCompleteButton({ moduleId, lessonId, isComplete, nex
     if (isComplete) { if (nextHref) router.push(nextHref); return }
     setLoading(true)
     try {
-      await fetch('/api/progress', {
+      const res = await fetch('/api/progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ moduleId, lessonId }),
       })
-    } catch (e) {}
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        console.error('[progress]', res.status, body)
+      }
+    } catch (e) { console.error('[progress fetch error]', e) }
     setLoading(false)
     if (nextHref) router.push(nextHref)
     else router.refresh()
