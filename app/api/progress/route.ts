@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { getLessonCount } from '@/lib/content'
 
@@ -25,5 +26,6 @@ export async function POST(req: NextRequest) {
     .upsert({ user_id: user.id, module_id: moduleId, lesson_id: lessonId }, { onConflict: 'user_id,module_id,lesson_id' })
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  revalidatePath('/course', 'layout')
   return NextResponse.json({ ok: true })
 }
