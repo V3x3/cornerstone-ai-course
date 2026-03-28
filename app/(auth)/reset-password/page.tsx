@@ -14,13 +14,16 @@ function ResetForm() {
   const supabase = createClient()
 
   useEffect(() => {
+    let mounted = true
     const code = searchParams.get('code')
     if (!code) { router.replace('/forgot-password'); return }
     supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
+      if (!mounted) return
       if (error) router.replace('/forgot-password')
       else setReady(true)
     })
-  }, [])
+    return () => { mounted = false }
+  }, [searchParams, router])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -30,6 +33,7 @@ function ResetForm() {
     setError(null)
     const { error } = await supabase.auth.updateUser({ password })
     if (error) { setError(error.message); setLoading(false); return }
+    setLoading(false)
     router.push('/dashboard')
   }
 
