@@ -20,8 +20,11 @@ export function useToast() {
 export default function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([])
   const counter = useRef(0)
+  const timers = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map())
 
   const dismiss = useCallback((id: number) => {
+    const timer = timers.current.get(id)
+    if (timer) { clearTimeout(timer); timers.current.delete(id) }
     setToasts(prev => prev.filter(t => t.id !== id))
   }, [])
 
@@ -31,7 +34,8 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
       const capped = prev.length >= 3 ? prev.slice(1) : prev
       return [...capped, { id, message, type }]
     })
-    setTimeout(() => dismiss(id), 3000)
+    const timer = setTimeout(() => dismiss(id), 3000)
+    timers.current.set(id, timer)
   }, [dismiss])
 
   return (
@@ -70,6 +74,7 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
             <span style={{ flex: 1, lineHeight: 1.4 }}>{t.message}</span>
             <button
               onClick={() => dismiss(t.id)}
+              aria-label="Dismiss notification"
               style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', padding: 0, fontSize: '16px', lineHeight: 1 }}
             >×</button>
           </div>
