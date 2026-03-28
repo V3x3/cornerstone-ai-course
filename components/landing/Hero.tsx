@@ -11,7 +11,7 @@ export default function Hero() {
         <span style={{ color: 'var(--g3)' }}>with AI.</span>
       </h1>
       <p style={{ fontSize: '15px', color: 'var(--text2)', lineHeight: 1.7, maxWidth: '500px', marginBottom: '24px' }}>
-        A free course for young professionals. 4 modules. Self-paced. No technical background required.
+        A free course for young European professionals. 5 modules. Self-paced. No prior knowledge required.
         Certificate of completion issued by Cornerstone EU.
       </p>
       <Link

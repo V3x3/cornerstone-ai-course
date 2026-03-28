@@ -14,17 +14,6 @@ export async function POST(_req: NextRequest) {
     return NextResponse.json({ error: 'Course not complete' }, { status: 403 })
   }
 
-  const { data: attempts } = await supabase
-    .from('quiz_attempts')
-    .select('module_id, passed')
-    .eq('user_id', user.id)
-    .eq('passed', true)
-
-  const passedModules = new Set((attempts ?? []).map(a => a.module_id))
-  if (![1,2,3,4].every(m => passedModules.has(m))) {
-    return NextResponse.json({ error: 'Not all quizzes passed' }, { status: 403 })
-  }
-
   const { data: existing } = await supabase
     .from('certificates').select('certificate_number').eq('user_id', user.id).single()
 
