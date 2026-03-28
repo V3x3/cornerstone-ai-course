@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Spinner from '@/components/ui/Spinner'
@@ -30,21 +30,38 @@ export default function QuizShell({ moduleId, questions, passMark, moduleTitle, 
 
   const allAnswered = questions.every(q => answers[q.id] !== undefined)
 
-  async function handleSubmit() {
-    setLoading(true)
-    const res = await fetch('/api/quiz', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ moduleId, answers }),
-    })
-    const data = await res.json()
-    setResult(data)
-    setLoading(false)
-    router.refresh()
-    if (data.passed) {
+  useEffect(() => {
+    if (!result) return
+    if (result.passed) {
       showToast(`Module ${moduleId} complete! Well done.`, 'success')
     } else {
-      showToast(`Score: ${data.score}% — you need ${data.passMark}% to pass. Try again!`, 'error')
+      showToast(`Score: ${result.score}% — you need ${result.passMark}% to pass. Try again!`, 'error')
+    }
+  }, [result])
+
+  async function handleSubmit() {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/quiz', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ moduleId, answers }),
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        console.error('[quiz]', res.status, body)
+        showToast("Couldn't submit quiz — please try again", 'error')
+        setLoading(false)
+        return
+      }
+      const data = await res.json()
+      setResult(data)
+      setLoading(false)
+      if (data.passed) router.refresh()
+    } catch (e) {
+      console.error('[quiz fetch error]', e)
+      showToast("Couldn't submit quiz — please try again", 'error')
+      setLoading(false)
     }
   }
 
@@ -59,21 +76,21 @@ export default function QuizShell({ moduleId, questions, passMark, moduleTitle, 
 
   if (result) {
     const nextModule = MODULES.find(m => m.id === moduleId + 1)
-    const isFinalModule = moduleId === 4
+    const isFinalModule = !nextModule
 
     if (result.passed) {
       return (
         <div style={{ background: 'var(--bg2)', border: '1px solid #c8e0d0', borderRadius: '10px', padding: '28px 24px', maxWidth: '480px' }}>
           <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '20px' }}>
             <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--g3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>✓</span>
+              <span aria-hidden="true" style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>✓</span>
             </div>
             <div>
               <p style={{ fontSize: '16px', fontWeight: 700, color: 'var(--g1)', marginBottom: '4px' }}>
                 Module {moduleId} complete
               </p>
               <p style={{ fontSize: '13px', color: 'var(--text2)' }}>
-                You scored {result.score}% — well above the pass mark ({result.passMark}%)
+                You scored {result.score}% — above the pass mark ({result.passMark}%)
               </p>
             </div>
           </div>
@@ -113,7 +130,7 @@ export default function QuizShell({ moduleId, questions, passMark, moduleTitle, 
       <div style={{ background: 'var(--bg2)', border: '1px solid #c8e0d0', borderRadius: '10px', padding: '28px 24px', maxWidth: '480px' }}>
         <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '20px' }}>
           <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#f87171', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>✗</span>
+            <span aria-hidden="true" style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>✗</span>
           </div>
           <div>
             <p style={{ fontSize: '16px', fontWeight: 700, color: 'var(--g1)', marginBottom: '4px' }}>Not quite</p>
@@ -123,7 +140,7 @@ export default function QuizShell({ moduleId, questions, passMark, moduleTitle, 
           </div>
         </div>
         <button
-          onClick={() => setResult(null)}
+          onClick={() => { setResult(null); setAnswers({}) }}
           style={{ background: 'var(--g3)', color: '#fff', border: 'none', padding: '12px 20px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', width: '100%' }}
         >
           Try again
@@ -168,7 +185,7 @@ export default function QuizShell({ moduleId, questions, passMark, moduleTitle, 
           background: allAnswered ? 'var(--g3)' : 'var(--bg2)',
           color: allAnswered ? '#fff' : 'var(--text3)',
           border: 'none', padding: '12px 28px', borderRadius: '6px',
-          fontSize: '13px', fontWeight: 600, cursor: allAnswered ? 'pointer' : 'default',
+          fontSize: '13px', fontWeight: 600, cursor: allAnswered ? 'pointer' : 'not-allowed',
           display: 'inline-flex', alignItems: 'center', gap: '8px',
         }}
       >
