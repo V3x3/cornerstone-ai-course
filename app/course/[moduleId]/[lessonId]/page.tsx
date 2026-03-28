@@ -35,7 +35,10 @@ export default async function LessonPage({ params }: Props) {
     .select('module_id, lesson_id')
     .eq('user_id', user.id)
 
-  const isComplete = (progress ?? []).some(p => p.module_id === moduleId && p.lesson_id === lessonId)
+  const completed = progress ?? []
+  const isComplete = completed.some(p => p.module_id === moduleId && p.lesson_id === lessonId)
+  const moduleLessonCount = module.lessons.length
+  const completedInModule = completed.filter(p => p.module_id === moduleId).length
 
   const nextLesson = getLesson(moduleId, lessonId + 1)
   const nextHref = nextLesson ? `/course/${moduleId}/${lessonId + 1}` : null
@@ -53,6 +56,8 @@ export default async function LessonPage({ params }: Props) {
         moduleId={moduleId} lessonId={lessonId}
         isComplete={isComplete}
         nextHref={nextHref}
+        moduleLessonCount={moduleLessonCount}
+        completedInModule={completedInModule}
       />
     </div>
   )
