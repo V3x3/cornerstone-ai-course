@@ -1,0 +1,10 @@
+{
+  "questions": [
+    { "id": 1, "question": "What defines an AI agent compared to a standard chatbot?", "options": ["Agents are faster", "Agents can take actions in a loop — calling tools, reading results, deciding next steps", "Agents use more memory", "Agents are always connected to the internet"], "correct": 1 },
+    { "id": 2, "question": "What is a token in the context of language models?", "options": ["A login credential", "A unit of text (roughly a word or word fragment) that the model processes", "A measure of model speed", "A type of API key"], "correct": 1 },
+    { "id": 3, "question": "What does 'context window' mean?", "options": ["The GUI window where you type prompts", "The maximum amount of text (in tokens) a model can process in one call", "The model's memory across sessions", "The number of tools available to an agent"], "correct": 1 },
+    { "id": 4, "question": "What is an MCP server?", "options": ["A type of cloud server for hosting models", "A protocol that lets AI models call external tools like file systems, APIs, or browsers", "A multiplayer game server", "A monitoring system for AI costs"], "correct": 1 },
+    { "id": 5, "question": "Why does understanding token costs matter for building AI workflows?", "options": ["It doesn't — tokens are free", "So you can predict and control the cost of API calls in production", "Only for enterprise users", "Tokens only matter for image models"], "correct": 1 }
+  ],
+  "passMark": 60
+}

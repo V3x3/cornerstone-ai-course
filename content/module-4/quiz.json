@@ -1,0 +1,10 @@
+{
+  "questions": [
+    { "id": 1, "question": "What does Nassim Taleb mean by 'antifragile'?", "options": ["Resistant to damage", "Something that benefits and grows stronger from disorder, stress, and uncertainty", "Perfectly efficient systems", "Immune to change"], "correct": 1 },
+    { "id": 2, "question": "In game theory, a Nash equilibrium is:", "options": ["When one player wins everything", "A state where no player can improve their outcome by unilaterally changing strategy", "The optimal global outcome for all players", "A random outcome"], "correct": 1 },
+    { "id": 3, "question": "The prisoner's dilemma demonstrates that:", "options": ["Cooperation always wins", "Individual rational choices can lead to collectively worse outcomes", "Criminals always confess", "Competition is always optimal"], "correct": 1 },
+    { "id": 4, "question": "Second-order thinking means:", "options": ["Thinking about a problem twice", "Considering the consequences of consequences — what happens after the immediate effect", "Using two AI models simultaneously", "Verifying your first answer"], "correct": 1 },
+    { "id": 5, "question": "Via negativa, applied to thinking with AI, suggests:", "options": ["Avoiding AI entirely", "Focusing on what to add to your process", "Improving clarity by removing bad inputs, biases, and noise rather than adding complexity", "Being pessimistic about AI outcomes"], "correct": 2 }
+  ],
+  "passMark": 60
+}

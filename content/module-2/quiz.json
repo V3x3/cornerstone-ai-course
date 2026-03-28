@@ -1,0 +1,10 @@
+{
+  "questions": [
+    { "id": 1, "question": "What is 'few-shot prompting'?", "options": ["Giving the AI very little context", "Providing examples of the desired input-output pattern in the prompt", "Running a prompt multiple times", "Using a short prompt for speed"], "correct": 1 },
+    { "id": 2, "question": "Chain-of-thought prompting works best for:", "options": ["Creative writing tasks", "Fast, simple lookups", "Multi-step reasoning tasks where showing work improves accuracy", "Image generation"], "correct": 2 },
+    { "id": 3, "question": "Which model is generally best for long-form document analysis requiring nuance?", "options": ["GPT-3.5", "Claude (Sonnet or Opus) — known for large context and careful reasoning", "Gemini Flash", "All models perform identically"], "correct": 1 },
+    { "id": 4, "question": "What is the most effective first step when building a personal AI workflow?", "options": ["Learn to code", "Subscribe to every AI tool available", "Identify one repetitive task you do weekly and automate that first", "Wait for better models"], "correct": 2 },
+    { "id": 5, "question": "Why does providing context about your role improve AI output quality?", "options": ["It makes the AI work faster", "It helps the model calibrate vocabulary, depth, and format to your actual needs", "It reduces token usage", "It has no effect"], "correct": 1 }
+  ],
+  "passMark": 60
+}
