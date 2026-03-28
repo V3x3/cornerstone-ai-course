@@ -43,16 +43,19 @@ export default function MarkCompleteButton({
       showToast(`Lesson complete — ${newCount}/${moduleLessonCount} done in this module`, 'success')
       setDone(true)
       setPulsing(true)
-      setTimeout(() => setPulsing(false), 400)
+      setTimeout(() => {
+        setPulsing(false)
+        setLoading(false)
+        if (nextHref) router.push(nextHref)
+        else router.refresh()
+      }, 400)
+      return
     } catch (e) {
       console.error('[progress fetch error]', e)
       showToast("Couldn't save progress — please try again", 'error')
       setLoading(false)
       return
     }
-    setLoading(false)
-    if (nextHref) router.push(nextHref)
-    else router.refresh()
   }
 
   return (
