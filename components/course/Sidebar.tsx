@@ -1,15 +1,19 @@
+'use client'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import type { ProgressRow } from '@/lib/progress'
 import { MODULES } from '@/lib/content'
 import { calculateModuleProgress } from '@/lib/progress'
 
 interface Props {
   completed: ProgressRow[]
-  currentModuleId: number
-  currentLessonId: number
 }
 
-export default function Sidebar({ completed, currentModuleId, currentLessonId }: Props) {
+export default function Sidebar({ completed }: Props) {
+  const pathname = usePathname()
+  const parts = pathname.split('/')
+  const currentModuleId = parseInt(parts[2] ?? '1')
+  const currentLessonId = parseInt(parts[3] ?? '1')
   return (
     <nav style={{ width: '260px', flexShrink: 0, background: 'var(--bg2)', borderRight: '1px solid #c8e0d0', minHeight: '100vh', padding: '24px 0' }}>
       <div style={{ padding: '0 20px 16px', borderBottom: '1px solid #c8e0d0' }}>

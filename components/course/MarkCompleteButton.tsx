@@ -16,14 +16,16 @@ export default function MarkCompleteButton({ moduleId, lessonId, isComplete, nex
   async function handleClick() {
     if (isComplete) { if (nextHref) router.push(nextHref); return }
     setLoading(true)
-    await fetch('/api/progress', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ moduleId, lessonId }),
-    })
-    router.refresh()
-    if (nextHref) router.push(nextHref)
+    try {
+      await fetch('/api/progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ moduleId, lessonId }),
+      })
+    } catch (e) {}
     setLoading(false)
+    if (nextHref) router.push(nextHref)
+    else router.refresh()
   }
 
   return (
