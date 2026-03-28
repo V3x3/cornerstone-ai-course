@@ -1,6 +1,10 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import Spinner from '@/components/ui/Spinner'
+import { useToast } from '@/components/ui/ToastProvider'
+import { MODULES } from '@/lib/content'
 
 interface Question {
   id: number
@@ -22,6 +26,7 @@ export default function QuizShell({ moduleId, questions, passMark, moduleTitle, 
   const [result, setResult] = useState<{ score: number; passed: boolean; passMark: number } | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { showToast } = useToast()
 
   const allAnswered = questions.every(q => answers[q.id] !== undefined)
 
@@ -36,33 +41,93 @@ export default function QuizShell({ moduleId, questions, passMark, moduleTitle, 
     setResult(data)
     setLoading(false)
     router.refresh()
+    if (data.passed) {
+      showToast(`Module ${moduleId} complete! Well done.`, 'success')
+    } else {
+      showToast(`Score: ${data.score}% — you need ${data.passMark}% to pass. Try again!`, 'error')
+    }
+  }
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '64px 0', gap: '16px' }}>
+        <Spinner />
+        <p style={{ fontSize: '13px', color: 'var(--text3)' }}>Checking answers…</p>
+      </div>
+    )
   }
 
   if (result) {
+    const nextModule = MODULES.find(m => m.id === moduleId + 1)
+    const isFinalModule = moduleId === 4
+
+    if (result.passed) {
+      return (
+        <div style={{ background: 'var(--bg2)', border: '1px solid #c8e0d0', borderRadius: '10px', padding: '28px 24px', maxWidth: '480px' }}>
+          <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '20px' }}>
+            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--g3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>✓</span>
+            </div>
+            <div>
+              <p style={{ fontSize: '16px', fontWeight: 700, color: 'var(--g1)', marginBottom: '4px' }}>
+                Module {moduleId} complete
+              </p>
+              <p style={{ fontSize: '13px', color: 'var(--text2)' }}>
+                You scored {result.score}% — well above the pass mark ({result.passMark}%)
+              </p>
+            </div>
+          </div>
+
+          {!isFinalModule && nextModule && (
+            <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid #a3d9b5', borderLeft: '3px solid var(--g3)', borderRadius: '6px', padding: '12px 14px', marginBottom: '20px', fontSize: '13px', color: 'var(--text2)' }}>
+              {nextModule.title} unlocked →
+            </div>
+          )}
+          {isFinalModule && (
+            <div style={{ background: 'rgba(34,197,94,0.08)', border: '1px solid #a3d9b5', borderLeft: '3px solid var(--g3)', borderRadius: '6px', padding: '12px 14px', marginBottom: '20px', fontSize: '13px', color: 'var(--text2)' }}>
+              Course complete — your certificate is ready →
+            </div>
+          )}
+
+          {!isFinalModule && (
+            <Link
+              href={`/course/${moduleId + 1}/1`}
+              style={{ display: 'block', background: 'var(--g3)', color: '#fff', padding: '12px 20px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', textAlign: 'center' }}
+            >
+              Start Module {moduleId + 1} →
+            </Link>
+          )}
+          {isFinalModule && (
+            <Link
+              href="/certificate"
+              style={{ display: 'block', background: 'var(--g3)', color: '#fff', padding: '12px 20px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', textAlign: 'center' }}
+            >
+              Get your certificate →
+            </Link>
+          )}
+        </div>
+      )
+    }
+
     return (
-      <div style={{ textAlign: 'center', padding: '48px 0' }}>
-        <div style={{ fontSize: '64px', marginBottom: '16px' }}>{result.passed ? '🎉' : '📚'}</div>
-        <h2 style={{ fontSize: '32px', fontWeight: 700, color: 'var(--g1)', marginBottom: '8px' }}>
-          {result.score}%
-        </h2>
-        <p style={{ fontSize: '15px', color: result.passed ? 'var(--g2)' : 'var(--text2)', marginBottom: '24px' }}>
-          {result.passed ? `You passed! (pass mark: ${result.passMark}%)` : `Not quite — pass mark is ${result.passMark}%. Try again.`}
-        </p>
-        {result.passed && moduleId < 4 && (
-          <a href={`/course/${moduleId + 1}/1`} style={{ display: 'inline-block', background: 'var(--g3)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-            Start Module 0{moduleId + 1} →
-          </a>
-        )}
-        {result.passed && moduleId === 4 && (
-          <a href="/certificate" style={{ display: 'inline-block', background: 'var(--g3)', color: '#fff', padding: '12px 28px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-            Get your certificate →
-          </a>
-        )}
-        {!result.passed && (
-          <button onClick={() => setResult(null)} style={{ background: 'var(--bg2)', color: 'var(--g2)', border: '1px solid var(--g2)', padding: '12px 28px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
-            Retry quiz
-          </button>
-        )}
+      <div style={{ background: 'var(--bg2)', border: '1px solid #c8e0d0', borderRadius: '10px', padding: '28px 24px', maxWidth: '480px' }}>
+        <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', marginBottom: '20px' }}>
+          <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#f87171', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <span style={{ color: '#fff', fontSize: '18px', fontWeight: 700 }}>✗</span>
+          </div>
+          <div>
+            <p style={{ fontSize: '16px', fontWeight: 700, color: 'var(--g1)', marginBottom: '4px' }}>Not quite</p>
+            <p style={{ fontSize: '13px', color: 'var(--text2)' }}>
+              You scored {result.score}% — you need {result.passMark}% to pass
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => setResult(null)}
+          style={{ background: 'var(--g3)', color: '#fff', border: 'none', padding: '12px 20px', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', width: '100%' }}
+        >
+          Try again
+        </button>
       </div>
     )
   }
@@ -104,9 +169,10 @@ export default function QuizShell({ moduleId, questions, passMark, moduleTitle, 
           color: allAnswered ? '#fff' : 'var(--text3)',
           border: 'none', padding: '12px 28px', borderRadius: '6px',
           fontSize: '13px', fontWeight: 600, cursor: allAnswered ? 'pointer' : 'default',
+          display: 'inline-flex', alignItems: 'center', gap: '8px',
         }}
       >
-        {loading ? 'Submitting…' : 'Submit answers →'}
+        Submit answers →
       </button>
     </div>
   )
