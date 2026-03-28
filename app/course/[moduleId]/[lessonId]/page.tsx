@@ -2,10 +2,19 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import LessonContent from '@/components/course/LessonContent'
 import MarkCompleteButton from '@/components/course/MarkCompleteButton'
-import { getModule, getLesson } from '@/lib/content'
+import { getModule, getLesson, MODULES } from '@/lib/content'
 
 interface Props {
   params: Promise<{ moduleId: string; lessonId: string }>
+}
+
+export async function generateStaticParams() {
+  return MODULES.flatMap(m =>
+    m.lessons.map(l => ({
+      moduleId: String(m.id),
+      lessonId: String(l.id),
+    }))
+  )
 }
 
 export default async function LessonPage({ params }: Props) {
