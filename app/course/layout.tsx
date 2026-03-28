@@ -21,6 +21,7 @@ export default async function CourseLayout({ children }: { children: React.React
         @media (max-width: 768px) {
           .course-sidebar { display: none; }
           .course-mobile-nav { display: block; }
+          .course-main { padding: 24px 16px !important; }
         }
       `}</style>
 
@@ -34,7 +35,7 @@ export default async function CourseLayout({ children }: { children: React.React
         <div className="course-sidebar">
           <Sidebar completed={progress ?? []} />
         </div>
-        <main style={{ flex: 1, padding: '40px 48px', maxWidth: '720px' }}>
+        <main className="course-main" style={{ flex: 1, padding: '40px 48px', maxWidth: '720px' }}>
           {children}
         </main>
       </div>

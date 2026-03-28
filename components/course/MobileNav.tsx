@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Sidebar from './Sidebar'
 import type { ProgressRow } from '@/lib/progress'
@@ -61,7 +62,7 @@ export default function MobileNav({ completed }: Props) {
         <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--g1)' }}>
           {module ? `Module 0${moduleId}` : ''}{lesson ? ` · ${lesson.title}` : ''}
         </span>
-        <a href="/dashboard" style={{ fontSize: '12px', color: 'var(--g2)', textDecoration: 'none' }}>← Dashboard</a>
+        <Link href="/dashboard" style={{ fontSize: '12px', color: 'var(--g2)', textDecoration: 'none' }}>← Dashboard</Link>
       </div>
 
       {/* Overlay drawer */}
