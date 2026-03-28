@@ -9,7 +9,7 @@ export default function Spinner({ size = 'md' }: { size?: 'sm' | 'md' }) {
 
   return (
     <>
-      <style>{`
+      <style precedence="default">{`
         @keyframes spin-ring {
           from { transform: rotate(0deg);   }
           to   { transform: rotate(360deg); }
@@ -25,6 +25,7 @@ export default function Spinner({ size = 'md' }: { size?: 'sm' | 'md' }) {
         viewBox={`0 0 ${px} ${px}`}
         style={{ display: 'inline-block', verticalAlign: 'middle', flexShrink: 0 }}
         aria-label="Loading"
+        role="img"
       >
         <circle
           className="spinner-ring"
@@ -45,6 +46,7 @@ export default function Spinner({ size = 'md' }: { size?: 'sm' | 'md' }) {
           fill="#22c55e"
           fontSize={size === 'sm' ? 6 : 13}
           style={{ fontFamily: 'Georgia, serif', userSelect: 'none' }}
+          aria-hidden="true"
         >∞</text>
       </svg>
     </>
