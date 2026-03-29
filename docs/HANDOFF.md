@@ -152,7 +152,8 @@ Supabase Dashboard → SQL Editor → paste SQL → Run
 ## Environment variables
 Set in `.env.local` for local dev, and in Vercel for production:
 ```
-NEXT_PUBLIC_SUPABASE_URL=https://tsqszytokopqkxqodkyb.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_mEOV3vQiXm4HGQC7sBGA6g_43kVOJq-
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-project-url>
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
 ```
+(Get these from Supabase Dashboard → Project Settings → API)
 To add/update on Vercel: `vercel env add NEXT_PUBLIC_SUPABASE_URL production`
